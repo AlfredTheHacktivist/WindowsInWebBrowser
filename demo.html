@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<style>
+		.WindowSystem * { overflow: hidden; border: 0px; padding: 0px; margin: 0px; font-family: "Arial", Arial; }
+		.bannerBtn2:hover { background: black; color: white; border: 2px solid red; }
+		.bannerBtn { width: 20px; height: 20px; background: white; color: black; border: 2px solid red; }
+		
+		h3 { font-size: 13px; }
+		h2 { font-size: 16px; }
+		.code { font-family: "Courier New", Courier, monospace; background: grey; color: white; font-style: italic; margin: 2px; font-size: 13px; }
+		.codeexample { font-family: "Courier New", Courier, monospace; background: orange; color: black; font-style: italic; margin: 2px; font-size: 13px; }
+		#windowsZone { position: absolute; top: 10%; left: 10%; background-color: #4d3f6d; width: 80%; height: 80%; }
+		#taskBar { background: grey; }
+		</style>
+		<title>windows.js demo</title>
+		<script src="windows.js"></script> 
+	</head>
+	<body>
+		<div id="windowsZone">
+		</div>
+		<div id="manual_text" style="display: none;">
+			<h2>Usage of banner buttons :</h2>
+			<p style="padding: 5px;">
+- banner : drag the banner to move the window
+<br>- + / # : free / stick-to-grid mode
+<br>- S : resize window (click the button, move mouse, click anywhere to stop)
+<br>- X : close window, and stop associated threads
+<br>You can click anywhere in the window to bring it to front.
+			</p>
+			<h2>Coding with windows.js :</h2>
+			<div style="padding: 5px;">
+				<h3>one-line import :</h3>
+				<p class="code">
+				&lt;script src="windows.js"&gt;&lt;/script&gt; 
+				</p>
+				<h3>WindowSystem class :</h3>
+				<p class="code">
+	var WindowSystemHandler = new WindowSystem(/*DOM element where the windows will be placed*/);
+				</p>
+				<p class="codeexample">
+	var ws = new WindowSystem(windowsZone);
+				</p>
+				<h3>popup function :</h3>
+				<p class="code">
+	var windowHandler = ws.popup(sizeX, sizeY, title, css, mode [px || %]);
+				</p>
+				<h3>Examples :</h3>
+				<p class="codeexample">
+	b = ws.popup(300, 0, "Example 1 : dimensions specified", "background: grey;", "px");
+	<br>c = ws.popup(430, 150, "Example 2 : transparent background and assigned setInterval", "color: #4d3f6d;", "px");
+	<br>d = ws.popup(300, 300, "Example 3 : dimensions specified", "background: green;", "px");
+	<br>e = ws.popup(600, 300, "manual", "background: white;", "px");
+				</p>
+				<h3>Assigned setInterval :</h3>
+				<p>If you declare a setInterval() like that, it will be terminated as the user quit the window.</p>
+				<p class="code">
+	windowHandler.thrloop = setInterval(/*function*/, /*time between function calls*/);
+				</p>
+				<p class="codeexample">
+	b.thrloop = setInterval(function(){ b.content.innerText += "INTERVAL-EFFECT !\n"; }, 1000);
+				</p>
+			</div>
+		</div>
+	</body>
+	<script>
+
+ws = new WindowSystem(windowsZone);
+	
+b = ws.popup(300, 0, "Example 1 : dimensions specified", "background: grey;", "px");
+c = ws.popup(430, 150, "Example 2 : transparent background and assigned setInterval", "color: #4d3f6d;", "px");
+d = ws.popup(300, 300, "Example 3 : dimensions specified", "background: green;", "px");
+e = ws.popup(900, "", "manual", "background: white;", "px");
+
+b.content.innerText = "300x600";
+c.content.innerText = "400x150, transparent background";
+var d_html = '<div style="width: 100%; height: calc(50% - 12px);"></div>';
+d_html += '<h3 style="width: 100%; text-align: center;">dynamically centered text</h3>';
+d.content.innerHTML = d_html;
+e.content.innerHTML = manual_text.innerHTML;
+
+c.thrloop = setInterval(function(){ c.content.innerText += "\nINTERVAL-EFFECT !\n"; }, 1000);
+	</script>
+</html>

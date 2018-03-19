@@ -1,3 +1,5 @@
+// windows.js : windowing system made by AlfredTH
+
 class Window {
 	constructor(parentSystem, x, y, sx, sy, title, style="", mode="%"){
 		this.style = style;

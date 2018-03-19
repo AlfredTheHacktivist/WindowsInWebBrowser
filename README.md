@@ -4,7 +4,7 @@ A Windowing framework in JS
 # Usage of banner buttons :
 
 - banner : drag the banner to move the window
-- + / # : free / stick-to-grid mode
+- \+ / # : free / stick-to-grid mode
 - S : resize window (click the button, move mouse, click anywhere to stop)
 - X : close window, and stop associated threads
 You can click anywhere in the window to bring it to front.

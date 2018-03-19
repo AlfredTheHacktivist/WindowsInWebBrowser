@@ -25,7 +25,7 @@ var ws = new WindowSystem(windowsZone);
 
 ## popup function :
 ```javascript
-var windowHandler = ws.popup(sizeX, sizeY, title, css, mode [px || %]);
+var windowHandler = ws.popup(/*sizeX, sizeY, title, css, mode [px || %]*/);
 ```
 
 ## Examples :

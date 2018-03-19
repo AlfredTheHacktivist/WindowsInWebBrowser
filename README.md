@@ -1,4 +1,4 @@
-# WindowsInWebBrowser
+# windows.js
 A Windowing framework in JS
 ![wow](https://raw.githubusercontent.com/AlfredTheHacktivist/WindowsInWebBrowser/master/windows-js-demo.png)  
 # Usage of banner buttons :

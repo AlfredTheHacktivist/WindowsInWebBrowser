@@ -1,5 +1,4 @@
 // windows.js : windowing system made by AlfredTH
-
 class Window {
 	constructor(parentSystem, x, y, sx, sy, title, style="", mode="%"){
 		this.style = style;
@@ -18,6 +17,7 @@ class Window {
 		this.borderX = 0;
 		this.borderY = 0;
 		this.thrloop = false;
+		this.diefunc = false;
 		
 		this.divElement = document.createElement("div");
 		this.divElement.id = parentSystem.windows.length;
@@ -76,6 +76,12 @@ class Window {
 			parent.offsetY = e.clientY - parent.y;
 			parentSystem.pushToFront(this.parentElement.id);
 		}
+		banner.addEventListener("touchstart", function(e){
+			var parent = parentSystem.windows[this.parentElement.id];
+			parent.offsetX = e.changedTouches[0].pageX - parent.x;
+			parent.offsetY = e.changedTouches[0].pageY - parent.y;
+			parentSystem.pushToFront(this.parentElement.id);
+		}, false);
 		banner.style.width = "calc(100% - 60px)";
 		banner.style.minWidth = "20px";
 		banner.style.display = "flex";
@@ -110,8 +116,12 @@ class Window {
 		btn.onclick = function(){
 			var parentSystem = this.parentElement.parentElement.parentSystem;
 			var loopid = parentSystem.windows[this.parentElement.id].thrloop;
+			var diefunc = parentSystem.windows[this.parentElement.id].diefunc;
 			if (loopid){
 				clearInterval(loopid);
+			}
+			if (diefunc){
+				diefunc();
 			}
 			this.parentElement.remove();
 			parentSystem.windows.splice(this.parentElement.id, 1);
@@ -133,6 +143,9 @@ class WindowSystem {
 		this.WindowsZone.onmouseup = this.mouseUP;
 		this.WindowsZone.onmouseenter = this.mouseUP;
 		this.WindowsZone.onmousemove = this.moveWindow;
+		this.WindowsZone.addEventListener("touchend", this.mouseUP, false);
+		this.WindowsZone.addEventListener("touchleave", this.mouseUP, false);
+		this.WindowsZone.addEventListener("touchmove", this.moveWindowTouch, false);
 	}
 
 	popup(sx, sy, title, style="", mode="%"){
@@ -171,6 +184,7 @@ class WindowSystem {
 	moveWindow(e){
 		var parentSystem = this.parentSystem;
 		if (parentSystem.currentlyMovingWindow){
+			e.preventDefault();
 			var parent = parentSystem.currentlyMovingWindow;
 			var x = e.clientX-parent.offsetX;
 			var y = e.clientY-parent.offsetY;
@@ -184,9 +198,38 @@ class WindowSystem {
 			parent.update();
 		}
 		if (parentSystem.currentlyResizingWindow){
+			e.preventDefault();
 			var parent = parentSystem.windows[parentSystem.currentlyResizingWindow];
 			parent.sizeX = e.clientX - parent.x - parseInt(parentSystem.WindowsZone.offsetLeft);
 			parent.sizeY = e.clientY - parent.y - 20 - parseInt(parentSystem.WindowsZone.offsetTop);
+			if (parent.exactPosition){
+				parent.sizeX = parseInt(parent.sizeX/10)*10;
+				parent.sizeY = parseInt(parent.sizeY/10)*10;
+			}
+			parent.borderUpdate();
+			parent.update();
+		}
+	}
+
+	moveWindowTouch(e){
+		var parentSystem = this.parentSystem;
+		if (parentSystem.currentlyMovingWindow){
+			var parent = parentSystem.currentlyMovingWindow;
+			var x = e.changedTouches[0].pageX-parent.offsetX;
+			var y = e.changedTouches[0].pageY-parent.offsetY;
+			if (parent.exactPosition){
+				x = parseInt(x/10)*10;
+				y = parseInt(y/10)*10;
+			}
+			parent.x = (x >= 0 ? x:0);
+			parent.y = (y >= 0 ? y:0);
+			parent.borderUpdate();
+			parent.update();
+		}
+		if (parentSystem.currentlyResizingWindow){
+			var parent = parentSystem.windows[parentSystem.currentlyResizingWindow];
+			parent.sizeX = e.changedTouches[0].pageX - parent.x - parseInt(parentSystem.WindowsZone.offsetLeft);
+			parent.sizeY = e.changedTouches[0].pageY - parent.y - 20 - parseInt(parentSystem.WindowsZone.offsetTop);
 			if (parent.exactPosition){
 				parent.sizeX = parseInt(parent.sizeX/10)*10;
 				parent.sizeY = parseInt(parent.sizeY/10)*10;
